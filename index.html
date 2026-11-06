@@ -239,7 +239,7 @@ textarea{min-height:100px;resize:vertical}
 .checks{display:flex;flex-wrap:wrap;gap:8px}
 .checks label{display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-weight:600;color:var(--ink);cursor:pointer}
 .checks input{width:auto}
-.status{font-size:.9rem;margin:0;min-height:1.2em;color:var(--accent)}
+.status{font-size:.95rem;margin:0;min-height:1.2em;color:var(--accent);font-weight:600}
 .fallback{display:grid;gap:10px;background:var(--chip);border-radius:14px;padding:14px}
 .fallback textarea{min-height:120px;font-size:.85rem}
 @media (max-width:860px){.contact-band{grid-template-columns:1fr}}
@@ -374,7 +374,7 @@ footer{padding-block:32px;color:var(--muted);font-size:.85rem;display:flex;flex-
         <img src="media/logo-full.png" alt="Keerthana UGC creator logo" width="150" height="150" style="width:150px;height:150px;border-radius:50%;box-shadow:0 10px 30px rgba(0,0,0,.35)">
         <div class="eyebrow">Work with me</div>
         <h2>Let's Create Something For <em>Your Brand</em></h2>
-        <p class="lede">Fill in the form to prepare your enquiry, or email me directly. I reply to every enquiry.</p>
+        <p class="lede">Fill in the form to send your enquiry, or email me directly. I reply to every enquiry.</p>
         <div class="emailbox">
           <code id="email">ugcbykeerthanaa@gmail.com</code>
           <button class="btn sm" type="button" id="copyEmail">Copy email</button>
@@ -403,10 +403,10 @@ footer{padding-block:32px;color:var(--muted);font-size:.85rem;display:flex;flex-
             <label><input type="checkbox" value="Voiceover / routine">Voiceover / routine</label>
           </div></div>
         <label for="f-msg">Your brief<textarea id="f-msg" placeholder="Number of videos, platform, timeline, references…"></textarea></label>
-        <button class="btn" type="submit">Prepare my enquiry</button>
+        <button class="btn" type="submit" id="sendBtn">Send enquiry</button>
         <p class="status" id="status" role="status"></p>
         <div class="fallback" id="fallback" hidden>
-          <b>Your enquiry is ready. Send it to ugcbykeerthanaa@gmail.com</b>
+          <b>Your enquiry couldn't be sent from this page. Please email it to ugcbykeerthanaa@gmail.com</b>
           <span style="font-size:.88rem;color:var(--muted)">Tap "Open in email" to send it, or copy the text and paste it into an email or DM.</span>
           <textarea id="fbText" readonly></textarea>
           <div class="cta"><a class="btn sm" id="mailBrief" href="mailto:ugcbykeerthanaa@gmail.com">Open in email</a><button class="btn sm ghost" type="button" id="copyBrief">Copy enquiry</button></div>
@@ -558,7 +558,8 @@ async function copy(text,btn,label){try{await navigator.clipboard.writeText(text
 $('#copyEmail').onclick=e=>copy('ugcbykeerthanaa@gmail.com',e.target,'Copy email');
 $('#copyBrief').onclick=e=>{const t=$('#fbText');t.select();copy(t.value,e.target,'Copy enquiry');};
 
-/* enquiry form: builds a ready-to-send email */
+/* enquiry form: saves to Google Sheets via the linked Google Form; email fallback if it can't send */
+const GFORM='https://docs.google.com/forms/d/e/1FAIpQLSeh5tdrp2a9Y6vTc5dZ-7gjzwo6GVje2ThWu0DG-FpVux89zg/formResponse';
 function briefText(f){return `Hi Keerthana,\n\nName: ${f.name}\nBrand: ${f.brand}\nEmail: ${f.email}\nProduct: ${f.product||'-'}\nContent needed: ${f.types.join(', ')||'-'}\nBudget: ${f.budget||'Prefer to discuss'}\n\nBrief:\n${f.message||'-'}`;}
 $('#enq').addEventListener('submit',e=>{
   e.preventDefault(); const st=$('#status');
@@ -567,7 +568,12 @@ $('#enq').addEventListener('submit',e=>{
   if(!f.name||!f.brand||!/^\S+@\S+\.\S+$/.test(f.email)){st.textContent='Please add your name, brand and a valid email.';return;}
   st.textContent=''; const t=briefText(f); $('#fbText').value=t;
   $('#mailBrief').href='mailto:ugcbykeerthanaa@gmail.com?subject='+encodeURIComponent('UGC enquiry from '+f.brand)+'&body='+encodeURIComponent(t);
-  $('#fallback').hidden=false; $('#fallback').scrollIntoView({behavior:'smooth',block:'nearest'});
+  const btn=$('#sendBtn'); btn.disabled=true; btn.textContent='Sending…';
+  const body=new URLSearchParams({'entry.620747760':f.name,'entry.628891931':f.brand,'entry.441240258':f.email,'entry.1406000230':f.budget||'Prefer to discuss',
+    'entry.1393131886':f.product||'-','entry.745684559':f.types.join(', ')||'-','entry.1537774361':f.message||'-'});
+  fetch(GFORM,{method:'POST',mode:'no-cors',body})
+    .then(()=>{st.textContent=`Thank you, ${f.name}! Your enquiry has reached me. I'll reply to ${f.email} soon.`;$('#enq').reset();$('#fallback').hidden=true;btn.textContent='Sent';setTimeout(()=>{btn.disabled=false;btn.textContent='Send enquiry'},4000);})
+    .catch(()=>{btn.disabled=false;btn.textContent='Send enquiry';$('#fallback').hidden=false;$('#fallback').scrollIntoView({behavior:'smooth',block:'nearest'});});
 });
 </script>
 
