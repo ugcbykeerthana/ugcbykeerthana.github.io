@@ -41,16 +41,16 @@ if(/^G-[A-Z0-9]{6,}$/.test(window.GA_ID)&&window.GA_ID!=='G-XXXXXXXXXX'){
 /* Layout: image-led hero with two phone frames, a moving photo ribbon, a tabbed work wall (reels / raw clips / edited / raw photos), raw→edit slider, services, contact desk */
 :root{
   --bg:#f3ece4; --bg2:#ebe1d5; --surface:#fbf7f2; --ink:#2f241d; --muted:#7a6a5d; --line:#e0d3c5;
-  --accent:#8a5a44; --blush:#e7cfc0; --chip:#ece2d6; --shadow:rgba(60,40,25,.14);
+  --accent:#8a5a44; --error:#b3261e; --blush:#e7cfc0; --chip:#ece2d6; --shadow:rgba(60,40,25,.14);
   --display:"Playfair Display",Georgia,"Times New Roman",serif;
   --body:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#1c1713; --bg2:#231c17; --surface:#2a221c; --ink:#f1e7dc; --muted:#b5a596; --line:#3a3029;
-  --accent:#d9a084; --blush:#4a362c; --chip:#2f2721; --shadow:rgba(0,0,0,.45); color-scheme:dark}}
+  --accent:#d9a084; --error:#ff9a8f; --blush:#4a362c; --chip:#2f2721; --shadow:rgba(0,0,0,.45); color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#1c1713; --bg2:#231c17; --surface:#2a221c; --ink:#f1e7dc; --muted:#b5a596; --line:#3a3029;
-  --accent:#d9a084; --blush:#4a362c; --chip:#2f2721; --shadow:rgba(0,0,0,.45); color-scheme:dark}
+  --accent:#d9a084; --error:#ff9a8f; --blush:#4a362c; --chip:#2f2721; --shadow:rgba(0,0,0,.45); color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 /* theme toggle */
@@ -61,6 +61,14 @@ if(/^G-[A-Z0-9]{6,}$/.test(window.GA_ID)&&window.GA_ID!=='G-XXXXXXXXXX'){
 :root[data-theme="dark"] .theme-btn .sun{display:none}:root[data-theme="dark"] .theme-btn .moon{display:block}
 .mark>span:last-child,.navlinks .btn{white-space:nowrap}
 @media (max-width:440px){.logo{width:46px!important;height:46px!important}.mark{gap:10px}.mark>span:last-child{font-size:1.2rem!important}.navlinks{gap:10px}.navlinks .btn.sm{padding:8px 12px;font-size:.78rem}}
+/* back to top */
+.totop{position:fixed;z-index:40;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(80px + env(safe-area-inset-bottom,0px));
+  width:48px;height:48px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:grid;place-items:center;
+  cursor:pointer;box-shadow:0 10px 24px var(--shadow);transition:transform .35s,opacity .35s,bottom .35s}
+.totop:hover{transform:translateY(-3px)}
+.totop svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.totop.away{transform:translateY(140%);opacity:0;pointer-events:none}
+.totop.low{bottom:calc(18px + env(safe-area-inset-bottom,0px))}
 /* floating work-with-me */
 .fab{position:fixed;z-index:40;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));
   display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:999px;background:var(--ink);color:var(--bg);text-decoration:none;
@@ -72,7 +80,9 @@ if(/^G-[A-Z0-9]{6,}$/.test(window.GA_ID)&&window.GA_ID!=='G-XXXXXXXXXX'){
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:6px 14px;font:600 .82rem var(--body);cursor:pointer}
 .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
-.filters select{width:auto;padding:7px 12px;border-radius:999px;font:600 .82rem var(--body);background:var(--surface)}
+.sel{position:relative;display:inline-block}
+.sel select{-webkit-appearance:none;appearance:none;width:auto;min-width:130px;padding:8px 38px 8px 14px;border-radius:999px;border:1px solid var(--line);font:600 .84rem var(--body);background:var(--surface);color:var(--ink);cursor:pointer}
+.sel::after{content:"";position:absolute;right:15px;top:50%;width:7px;height:7px;border-right:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:translateY(-70%) rotate(45deg);pointer-events:none}
 .empty{grid-column:1/-1;color:var(--muted);padding:30px 0}
 /* about */
 .about{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:clamp(24px,5vw,64px);align-items:center}
@@ -95,7 +105,10 @@ h2{font-size:clamp(2rem,4.4vw,3.1rem);letter-spacing:-.01em}
 h2 em,h1 em{font-style:italic;color:var(--accent);font-weight:400}
 .eyebrow{font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:700}
 .lede{color:var(--muted);max-width:56ch;margin:0;font-size:1.05rem}
-section{padding-block:clamp(64px,9vw,112px)}
+section{padding-block:clamp(48px,6vw,80px)}
+#brands{padding-bottom:clamp(20px,3vw,36px)}
+#process{padding-top:clamp(28px,4vw,48px)}
+.fine{margin-bottom:0}
 .sec-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:20px 32px;margin-bottom:36px}
 .sec-head .t{display:grid;gap:12px;min-width:0}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
@@ -281,13 +294,20 @@ label{display:grid;gap:6px;font-size:.82rem;font-weight:700;color:var(--muted);m
 form{background:var(--surface);color:var(--ink);border-radius:24px;padding:clamp(20px,3vw,30px);display:grid;gap:16px}
 form .btn{background:var(--ink)!important;color:var(--bg)!important;border-color:var(--ink)!important}
 form .btn.ghost{background:transparent!important;color:var(--ink)!important}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
 @media (max-width:560px){.row{grid-template-columns:1fr}}
 input,select,textarea{font:500 .95rem var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:11px 13px;width:100%}
 textarea{min-height:100px;resize:vertical}
 .checks{display:flex;flex-wrap:wrap;gap:8px}
 .checks label{display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-weight:600;color:var(--ink);cursor:pointer}
 .checks input{width:auto}
+.req{color:var(--error);font-weight:700}
+.reqnote{margin:0;font-size:.8rem;color:var(--muted)}
+.ferr{display:flex;align-items:center;gap:6px;color:var(--error);font-size:.8rem;font-weight:600;letter-spacing:0;text-transform:none}
+.ferr::before{content:"!";flex:none;width:16px;height:16px;border-radius:50%;background:var(--error);color:var(--surface);display:grid;place-items:center;font-size:.7rem;font-weight:800}
+input[aria-invalid="true"]{border-color:var(--error);box-shadow:0 0 0 3px color-mix(in srgb,var(--error) 18%,transparent)}
+.status.err{color:var(--error)}
+.status.ok{color:var(--accent)}
 .status{font-size:.95rem;margin:0;min-height:1.2em;color:var(--accent);font-weight:600}
 .fallback{display:grid;gap:10px;background:var(--chip);border-radius:14px;padding:14px}
 .fallback textarea{min-height:120px;font-size:.85rem}
@@ -352,7 +372,7 @@ footer{padding-block:32px;color:var(--muted);font-size:.85rem;display:flex;flex-
     <p class="panel-note" id="panelNote"></p>
     <div class="filters" id="filters">
       <div class="chips" id="catChips" role="group" aria-label="Filter by category"></div>
-      <label for="brandSel" style="display:flex;align-items:center;gap:8px">Brand<select id="brandSel"></select></label>
+      <label for="brandSel" style="display:flex;align-items:center;gap:8px">Brand<span class="sel"><select id="brandSel"></select></span></label>
     </div>
     <div class="grid" id="grid"></div>
   </section>
@@ -452,12 +472,13 @@ footer{padding-block:32px;color:var(--muted);font-size:.85rem;display:flex;flex-
         </div>
       </div>
       <form id="enq" novalidate>
+        <p class="reqnote"><span class="req" aria-hidden="true">*</span> Required fields</p>
         <div class="row">
-          <label for="f-name">Your name<input id="f-name" required autocomplete="name"></label>
-          <label for="f-brand">Brand<input id="f-brand" required autocomplete="organization"></label>
+          <label for="f-name"><span>Your name <span class="req" aria-hidden="true">*</span></span><input id="f-name" required autocomplete="name" aria-describedby="e-name"><small class="ferr" id="e-name" hidden></small></label>
+          <label for="f-brand"><span>Brand <span class="req" aria-hidden="true">*</span></span><input id="f-brand" required autocomplete="organization" aria-describedby="e-brand"><small class="ferr" id="e-brand" hidden></small></label>
         </div>
         <div class="row">
-          <label for="f-email">Work email<input id="f-email" type="email" required autocomplete="email"></label>
+          <label for="f-email"><span>Work email <span class="req" aria-hidden="true">*</span></span><input id="f-email" type="email" required autocomplete="email" inputmode="email" aria-describedby="e-email"><small class="ferr" id="e-email" hidden></small></label>
           <label for="f-budget">Budget
             <select id="f-budget"><option value="">Prefer to discuss</option><option>Under ₹5,000</option><option>₹5,000 – ₹15,000</option><option>₹15,000 – ₹30,000</option><option>₹30,000+</option><option>Product barter</option></select></label>
         </div>
@@ -470,13 +491,13 @@ footer{padding-block:32px;color:var(--muted);font-size:.85rem;display:flex;flex-
             <label><input type="checkbox" value="Voiceover / routine">Voiceover / routine</label>
             <label><input type="checkbox" id="f-other-chk" value="Others">Others</label>
           </div>
-          <label for="f-other" id="f-other-wrap" hidden style="margin-top:10px">Tell me what you need<input id="f-other" placeholder="e.g. festive shoot, texture library, stop-motion…"></label></div>
+          <label for="f-other" id="f-other-wrap" hidden style="margin-top:10px"><span>Tell me what you need <span class="req" aria-hidden="true">*</span></span><input id="f-other" placeholder="e.g. festive shoot, texture library, stop-motion…" aria-describedby="e-other"><small class="ferr" id="e-other" hidden></small></label></div>
         <label for="f-msg">Your brief<textarea id="f-msg" placeholder="Number of videos, platform, timeline, references…"></textarea></label>
         <button class="btn" type="submit" id="sendBtn">Send enquiry</button>
         <p class="status" id="status" role="status"></p>
         <div class="fallback" id="fallback" hidden>
-          <b>Your enquiry couldn't be sent from this page. Please email it to ugcbykeerthanaa@gmail.com</b>
-          <span style="font-size:.88rem;color:var(--muted)">Tap "Open in email" to send it, or copy the text and paste it into an email or DM.</span>
+          <b>Sorry, your enquiry wasn't sent. The enquiry form couldn't be reached right now, so your details weren't saved.</b>
+          <span style="font-size:.88rem;color:var(--muted)">Please send it by email instead: tap "Open in email" to send it to ugcbykeerthanaa@gmail.com, or copy the text below. Your details are already filled in.</span>
           <textarea id="fbText" readonly></textarea>
           <div class="cta"><a class="btn sm" id="mailBrief" href="mailto:ugcbykeerthanaa@gmail.com">Open in email</a><button class="btn sm ghost" type="button" id="copyBrief">Copy enquiry</button></div>
         </div>
@@ -487,6 +508,7 @@ footer{padding-block:32px;color:var(--muted);font-size:.85rem;display:flex;flex-
   <footer><span>© Keerthana C · Faceless UGC creator · Trivandrum, India</span><span>ugcbykeerthanaa@gmail.com</span></footer>
 </main>
 
+<button class="totop away" id="totop" type="button" aria-label="Back to top"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
 <a class="fab away" id="fab" href="#contact"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Work With Me</a>
 
 <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Media viewer">
@@ -648,8 +670,9 @@ document.querySelectorAll('.rv').forEach(el=>{const r=el.getBoundingClientRect()
 setTimeout(()=>document.querySelectorAll('.rv').forEach(el=>el.classList.add('in')),4000);
 
 /* floating Work With Me: shows after the hero, hides at the contact section */
-(function(){const fab=$('#fab');let pastHero=false,atContact=false;const upd=()=>fab.classList.toggle('away',!pastHero||atContact);
-  if(!('IntersectionObserver' in window)){fab.classList.remove('away');return;}
+(function(){const fab=$('#fab');let pastHero=false,atContact=false;const tt=$('#totop');const upd=()=>{fab.classList.toggle('away',!pastHero||atContact);tt.classList.toggle('away',!pastHero);tt.classList.toggle('low',atContact);};
+  tt.addEventListener('click',()=>{window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});track('back_to_top');});
+  if(!('IntersectionObserver' in window)){fab.classList.remove('away');$('#totop').classList.remove('away');return;}
   new IntersectionObserver(es=>{pastHero=!es[0].isIntersecting;upd();}).observe($('.hero'));
   new IntersectionObserver(es=>{atContact=es[0].isIntersecting;upd();},{threshold:.15}).observe($('#contact'));
   fab.addEventListener('click',()=>track('click_work_with_me',{place:'floating'}));})();
@@ -658,8 +681,24 @@ async function copy(text,btn,label){try{await navigator.clipboard.writeText(text
 $('#copyEmail').onclick=e=>copy('ugcbykeerthanaa@gmail.com',e.target,'Copy email');
 $('#copyBrief').onclick=e=>{const t=$('#fbText');t.select();copy(t.value,e.target,'Copy enquiry');};
 
+/* form validation: clear messages per field */
+const RULES={
+  'f-name':v=>!v?'Please enter your name.':(/\d/.test(v)?'Your name shouldn\'t contain numbers.':(v.length<2?'Your name looks too short.':'')),
+  'f-brand':v=>!v?'Please enter your brand or company name.':'',
+  'f-email':v=>!v?'Please enter your work email.':(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)?'This email doesn\'t look right. It should look like name@brand.com.':''),
+  'f-other':v=>$('#f-other-chk').checked&&!v?'Please tell me what you need, or untick "Others".':''
+};
+const LABEL={'f-name':'Your name','f-brand':'Brand','f-email':'Work email','f-other':'Tell me what you need'};
+let tried=false;
+function checkField(id){const el=document.getElementById(id),msg=RULES[id](el.value.trim()),box=document.getElementById('e-'+id.slice(2));
+  box.textContent=msg;box.hidden=!msg;el.setAttribute('aria-invalid',msg?'true':'false');return msg;}
+function validate(){tried=true;return Object.keys(RULES).filter(id=>checkField(id)).map(id=>LABEL[id]);}
+Object.keys(RULES).forEach(id=>{const el=document.getElementById(id);
+  el.addEventListener('blur',()=>{if(tried||el.value.trim())checkField(id);});
+  el.addEventListener('input',()=>{if(el.getAttribute('aria-invalid')==='true'){checkField(id);if(!$('#enq [aria-invalid="true"]'))$('#status').textContent='';}});});
+$('#f-other-chk').addEventListener('change',e=>{if(!e.target.checked)checkField('f-other');});
 $('#f-other-chk').addEventListener('change',e=>{$('#f-other-wrap').hidden=!e.target.checked;if(e.target.checked)$('#f-other').focus();});
-$('#enq').addEventListener('reset',()=>{$('#f-other-wrap').hidden=true;});
+$('#enq').addEventListener('reset',()=>{$('#f-other-wrap').hidden=true;tried=false;Object.keys(RULES).forEach(id=>{document.getElementById(id).setAttribute('aria-invalid','false');document.getElementById('e-'+id.slice(2)).hidden=true;});});
 /* enquiry form: saves to Google Sheets via the linked Google Form; email fallback if it can't send */
 const GFORM='https://docs.google.com/forms/d/e/1FAIpQLSd5EWRCpELnX_w2woyMw_zQC5Vz0I9mm7n0LCnuJ4LcGKtNtw/formResponse';
 function briefText(f){return `Hi Keerthana,\n\nName: ${f.name}\nBrand: ${f.brand}\nEmail: ${f.email}\nProduct: ${f.product||'-'}\nContent needed: ${f.types.join(', ')||'-'}\nBudget: ${f.budget||'Prefer to discuss'}\n\nBrief:\n${f.message||'-'}`;}
@@ -667,15 +706,26 @@ $('#enq').addEventListener('submit',e=>{
   e.preventDefault(); const st=$('#status');
   const f={name:$('#f-name').value.trim(),brand:$('#f-brand').value.trim(),email:$('#f-email').value.trim(),budget:$('#f-budget').value,
     product:$('#f-product').value.trim(),message:$('#f-msg').value.trim(),types:[...document.querySelectorAll('#f-types input:checked')].map(x=>x.id==='f-other-chk'?('Others: '+($('#f-other').value.trim()||'not specified')):x.value)};
-  if(!f.name||!f.brand||!/^\S+@\S+\.\S+$/.test(f.email)){st.textContent='Please add your name, brand and a valid email.';return;}
+  const errs=validate(true);
+  if(errs.length){st.className='status err';st.textContent=errs.length===1?`Please fix 1 field: ${errs[0]}.`:`Please fix ${errs.length} fields: ${errs.join(', ')}.`;
+    const first=$('#enq [aria-invalid="true"]');if(first)first.focus();return;}
+  st.className='status';
   st.textContent=''; const t=briefText(f); $('#fbText').value=t;
   $('#mailBrief').href='mailto:ugcbykeerthanaa@gmail.com?subject='+encodeURIComponent('UGC enquiry from '+f.brand)+'&body='+encodeURIComponent(t);
   const btn=$('#sendBtn'); btn.disabled=true; btn.textContent='Sending…';
   const body=new URLSearchParams({'entry.870309584':f.name,'entry.704949269':f.brand,'entry.682560430':f.email,'entry.442919822':f.budget||'Prefer to discuss',
     'entry.1080423792':f.product||'-','entry.390896402':f.types.join(', ')||'-','entry.1370494880':f.message||'-'});
-  fetch(GFORM,{method:'POST',mode:'no-cors',body})
-    .then(()=>{track('enquiry_sent',{budget:f.budget||'discuss'});st.textContent=`Thank you, ${f.name}! Your enquiry has reached me. I'll get back to you soon from ugcbykeerthanaa@gmail.com.`;$('#enq').reset();$('#fallback').hidden=true;btn.textContent='Sent';setTimeout(()=>{btn.disabled=false;btn.textContent='Send enquiry'},4000);})
-    .catch(()=>{btn.disabled=false;btn.textContent='Send enquiry';$('#fallback').hidden=false;$('#fallback').scrollIntoView({behavior:'smooth',block:'nearest'});});
+  const done=()=>{track('enquiry_sent',{budget:f.budget||'discuss'});st.className='status ok';st.textContent=`Thank you, ${f.name}! Your enquiry has reached me. I'll get back to you soon from ugcbykeerthanaa@gmail.com.`;$('#enq').reset();$('#fallback').hidden=true;btn.textContent='Sent';setTimeout(()=>{btn.disabled=false;btn.textContent='Send enquiry'},4000);};
+  const fail=()=>{btn.disabled=false;btn.textContent='Send enquiry';st.className='status err';st.textContent='Your enquiry wasn\'t sent because the form couldn\'t be reached. Please use email below.';$('#fallback').hidden=false;$('#fallback').scrollIntoView({behavior:'smooth',block:'nearest'});};
+  /* send via a hidden form post (works on plain websites without extra permissions); fall back to email if it can't reach Google */
+  const viaIframe=()=>new Promise((res,rej)=>{let fr=document.getElementById('gf-frame');
+    if(!fr){fr=document.createElement('iframe');fr.name='gf-frame';fr.id='gf-frame';fr.hidden=true;fr.title='Form sender';document.body.appendChild(fr);}
+    const fm=document.createElement('form');fm.method='POST';fm.action=GFORM;fm.target='gf-frame';fm.hidden=true;
+    for(const [k,v] of body){const i=document.createElement('input');i.type='hidden';i.name=k;i.value=v;fm.appendChild(i);}
+    const t=setTimeout(()=>{fr.onload=null;fm.remove();rej();},9000);
+    fr.onload=()=>{clearTimeout(t);fr.onload=null;fm.remove();res();};
+    document.body.appendChild(fm);try{fm.submit();}catch(e){clearTimeout(t);fm.remove();rej();}});
+  fetch(GFORM,{method:'POST',mode:'no-cors',body}).then(done).catch(()=>viaIframe().then(done).catch(fail));
 });
 </script>
 
